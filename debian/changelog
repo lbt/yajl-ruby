@@ -1,0 +1,5 @@
+yajl-ruby (0.8.1-1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #nnnn)
+
+ -- David Greaves <david@ash.dgreaves.com>  Sun, 27 Mar 2011 23:31:24 +0100
