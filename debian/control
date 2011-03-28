@@ -12,7 +12,7 @@ Homepage: http://github.com/brianmario/yajl-ruby
 
 Package: ruby-yajl
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.8-yajl
 # For build:
 # rake-compiler (>= 0.7.5), rspec (>= 2.0.0)
 # For benchmarking:

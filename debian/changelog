@@ -1,3 +1,9 @@
+yajl-ruby (0.8.1-4) unstable; urgency=low
+
+  * Depend on default ruby version
+
+ -- David Greaves <david@dgreaves.com>  Mon, 28 Mar 2011 14:12:43 +0100
+
 yajl-ruby (0.8.1-3) unstable; urgency=low
 
   * Update build and runtime deps
