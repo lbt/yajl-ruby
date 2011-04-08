@@ -1,3 +1,11 @@
+ruby-yajl (0.8.1-7) unstable; urgency=low
+
+  * Rename extension to yaml_ext to avoid LOAD_PATH issues
+    (workaround #621500)
+  * Calculate git ls-files at packaging time
+
+ -- David Greaves <david@dgreaves.com>  Fri, 08 Apr 2011 12:50:01 +0100
+
 ruby-yajl (0.8.1-5) unstable; urgency=low
 
   * Update to use gem2deb 0.2.1

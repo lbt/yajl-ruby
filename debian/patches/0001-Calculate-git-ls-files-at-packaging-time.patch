@@ -1,0 +1,291 @@
+From: David Greaves <david@dgreaves.com>
+Date: Wed, 6 Apr 2011 00:27:07 +0100
+Subject: [PATCH] Calculate git ls-files at packaging time
+
+---
+ git.ls-files               |  161 ++++++++++++++++++++++++++++++++++++++++++++
+ git.ls-files.spec.examples |   86 +++++++++++++++++++++++
+ yajl-ruby.gemspec          |    4 +-
+ 3 files changed, 249 insertions(+), 2 deletions(-)
+ create mode 100644 git.ls-files
+ create mode 100644 git.ls-files.spec.examples
+
+diff --git a/git.ls-files b/git.ls-files
+new file mode 100644
+index 0000000..80ee905
+--- /dev/null
++++ b/git.ls-files
+@@ -0,0 +1,161 @@
++.gitignore
++.rspec
++CHANGELOG.md
++Gemfile
++MIT-LICENSE
++README.rdoc
++Rakefile
++benchmark/encode.rb
++benchmark/encode_json_and_marshal.rb
++benchmark/encode_json_and_yaml.rb
++benchmark/http.rb
++benchmark/parse.rb
++benchmark/parse_json_and_marshal.rb
++benchmark/parse_json_and_yaml.rb
++benchmark/parse_stream.rb
++benchmark/subjects/item.json
++benchmark/subjects/ohai.json
++benchmark/subjects/ohai.marshal_dump
++benchmark/subjects/ohai.yml
++benchmark/subjects/twitter_search.json
++benchmark/subjects/twitter_stream.json
++benchmark/subjects/unicode.json
++debian/changelog
++debian/compat
++debian/control
++debian/copyright
++debian/gbp.conf
++debian/patches/debian-changes-0.8.1-1
++debian/patches/series
++debian/ruby-test-files.yaml
++debian/ruby-yajl.docs
++debian/ruby-yajl.examples
++debian/rules
++debian/source/format
++debian/watch
++examples/encoding/chunked_encoding.rb
++examples/encoding/one_shot.rb
++examples/encoding/to_an_io.rb
++examples/http/twitter_search_api.rb
++examples/http/twitter_stream_api.rb
++examples/parsing/from_file.rb
++examples/parsing/from_stdin.rb
++examples/parsing/from_string.rb
++ext/yajl/api/yajl_common.h
++ext/yajl/api/yajl_gen.h
++ext/yajl/api/yajl_parse.h
++ext/yajl/api/yajl_version.h
++ext/yajl/extconf.rb
++ext/yajl/yajl.c
++ext/yajl/yajl_alloc.c
++ext/yajl/yajl_alloc.h
++ext/yajl/yajl_buf.c
++ext/yajl/yajl_buf.h
++ext/yajl/yajl_bytestack.h
++ext/yajl/yajl_encode.c
++ext/yajl/yajl_encode.h
++ext/yajl/yajl_ext.c
++ext/yajl/yajl_ext.h
++ext/yajl/yajl_gen.c
++ext/yajl/yajl_lex.c
++ext/yajl/yajl_lex.h
++ext/yajl/yajl_parser.c
++ext/yajl/yajl_parser.h
++ext/yajl/yajl_version.c
++lib/yajl.rb
++lib/yajl/bzip2.rb
++lib/yajl/bzip2/stream_reader.rb
++lib/yajl/bzip2/stream_writer.rb
++lib/yajl/deflate.rb
++lib/yajl/deflate/stream_reader.rb
++lib/yajl/deflate/stream_writer.rb
++lib/yajl/gzip.rb
++lib/yajl/gzip/stream_reader.rb
++lib/yajl/gzip/stream_writer.rb
++lib/yajl/http_stream.rb
++lib/yajl/json_gem.rb
++lib/yajl/json_gem/encoding.rb
++lib/yajl/json_gem/parsing.rb
++lib/yajl/version.rb
++rpm/rubygem-yajl-ruby.spec
++spec/encoding/encoding_spec.rb
++spec/global/global_spec.rb
++spec/http/fixtures/http.bzip2.dump
++spec/http/fixtures/http.chunked.dump
++spec/http/fixtures/http.deflate.dump
++spec/http/fixtures/http.error.dump
++spec/http/fixtures/http.gzip.dump
++spec/http/fixtures/http.html.dump
++spec/http/fixtures/http.raw.dump
++spec/http/http_delete_spec.rb
++spec/http/http_error_spec.rb
++spec/http/http_get_spec.rb
++spec/http/http_post_spec.rb
++spec/http/http_put_spec.rb
++spec/json_gem_compatibility/compatibility_spec.rb
++spec/parsing/active_support_spec.rb
++spec/parsing/chunked_spec.rb
++spec/parsing/fixtures/fail.15.json
++spec/parsing/fixtures/fail.16.json
++spec/parsing/fixtures/fail.17.json
++spec/parsing/fixtures/fail.26.json
++spec/parsing/fixtures/fail11.json
++spec/parsing/fixtures/fail12.json
++spec/parsing/fixtures/fail13.json
++spec/parsing/fixtures/fail14.json
++spec/parsing/fixtures/fail19.json
++spec/parsing/fixtures/fail20.json
++spec/parsing/fixtures/fail21.json
++spec/parsing/fixtures/fail22.json
++spec/parsing/fixtures/fail23.json
++spec/parsing/fixtures/fail24.json
++spec/parsing/fixtures/fail25.json
++spec/parsing/fixtures/fail27.json
++spec/parsing/fixtures/fail28.json
++spec/parsing/fixtures/fail3.json
++spec/parsing/fixtures/fail4.json
++spec/parsing/fixtures/fail5.json
++spec/parsing/fixtures/fail6.json
++spec/parsing/fixtures/fail9.json
++spec/parsing/fixtures/pass.array.json
++spec/parsing/fixtures/pass.codepoints_from_unicode_org.json
++spec/parsing/fixtures/pass.contacts.json
++spec/parsing/fixtures/pass.db100.xml.json
++spec/parsing/fixtures/pass.db1000.xml.json
++spec/parsing/fixtures/pass.dc_simple_with_comments.json
++spec/parsing/fixtures/pass.deep_arrays.json
++spec/parsing/fixtures/pass.difficult_json_c_test_case.json
++spec/parsing/fixtures/pass.difficult_json_c_test_case_with_comments.json
++spec/parsing/fixtures/pass.doubles.json
++spec/parsing/fixtures/pass.empty_array.json
++spec/parsing/fixtures/pass.empty_string.json
++spec/parsing/fixtures/pass.escaped_bulgarian.json
++spec/parsing/fixtures/pass.escaped_foobar.json
++spec/parsing/fixtures/pass.item.json
++spec/parsing/fixtures/pass.json-org-sample1.json
++spec/parsing/fixtures/pass.json-org-sample2.json
++spec/parsing/fixtures/pass.json-org-sample3.json
++spec/parsing/fixtures/pass.json-org-sample4-nows.json
++spec/parsing/fixtures/pass.json-org-sample4.json
++spec/parsing/fixtures/pass.json-org-sample5.json
++spec/parsing/fixtures/pass.map-spain.xml.json
++spec/parsing/fixtures/pass.ns-invoice100.xml.json
++spec/parsing/fixtures/pass.ns-soap.xml.json
++spec/parsing/fixtures/pass.numbers-fp-4k.json
++spec/parsing/fixtures/pass.numbers-fp-64k.json
++spec/parsing/fixtures/pass.numbers-int-4k.json
++spec/parsing/fixtures/pass.numbers-int-64k.json
++spec/parsing/fixtures/pass.twitter-search.json
++spec/parsing/fixtures/pass.twitter-search2.json
++spec/parsing/fixtures/pass.unicode.json
++spec/parsing/fixtures/pass.yelp.json
++spec/parsing/fixtures/pass1.json
++spec/parsing/fixtures/pass2.json
++spec/parsing/fixtures/pass3.json
++spec/parsing/fixtures_spec.rb
++spec/parsing/one_off_spec.rb
++spec/rcov.opts
++spec/spec_helper.rb
++tasks/compile.rake
++tasks/rspec.rake
++yajl-ruby.gemspec
+diff --git a/git.ls-files.spec.examples b/git.ls-files.spec.examples
+new file mode 100644
+index 0000000..e72bba5
+--- /dev/null
++++ b/git.ls-files.spec.examples
+@@ -0,0 +1,86 @@
++examples/encoding/chunked_encoding.rb
++examples/encoding/one_shot.rb
++examples/encoding/to_an_io.rb
++examples/http/twitter_search_api.rb
++examples/http/twitter_stream_api.rb
++examples/parsing/from_file.rb
++examples/parsing/from_stdin.rb
++examples/parsing/from_string.rb
++spec/encoding/encoding_spec.rb
++spec/global/global_spec.rb
++spec/http/fixtures/http.bzip2.dump
++spec/http/fixtures/http.chunked.dump
++spec/http/fixtures/http.deflate.dump
++spec/http/fixtures/http.error.dump
++spec/http/fixtures/http.gzip.dump
++spec/http/fixtures/http.html.dump
++spec/http/fixtures/http.raw.dump
++spec/http/http_delete_spec.rb
++spec/http/http_error_spec.rb
++spec/http/http_get_spec.rb
++spec/http/http_post_spec.rb
++spec/http/http_put_spec.rb
++spec/json_gem_compatibility/compatibility_spec.rb
++spec/parsing/active_support_spec.rb
++spec/parsing/chunked_spec.rb
++spec/parsing/fixtures/fail.15.json
++spec/parsing/fixtures/fail.16.json
++spec/parsing/fixtures/fail.17.json
++spec/parsing/fixtures/fail.26.json
++spec/parsing/fixtures/fail11.json
++spec/parsing/fixtures/fail12.json
++spec/parsing/fixtures/fail13.json
++spec/parsing/fixtures/fail14.json
++spec/parsing/fixtures/fail19.json
++spec/parsing/fixtures/fail20.json
++spec/parsing/fixtures/fail21.json
++spec/parsing/fixtures/fail22.json
++spec/parsing/fixtures/fail23.json
++spec/parsing/fixtures/fail24.json
++spec/parsing/fixtures/fail25.json
++spec/parsing/fixtures/fail27.json
++spec/parsing/fixtures/fail28.json
++spec/parsing/fixtures/fail3.json
++spec/parsing/fixtures/fail4.json
++spec/parsing/fixtures/fail5.json
++spec/parsing/fixtures/fail6.json
++spec/parsing/fixtures/fail9.json
++spec/parsing/fixtures/pass.array.json
++spec/parsing/fixtures/pass.codepoints_from_unicode_org.json
++spec/parsing/fixtures/pass.contacts.json
++spec/parsing/fixtures/pass.db100.xml.json
++spec/parsing/fixtures/pass.db1000.xml.json
++spec/parsing/fixtures/pass.dc_simple_with_comments.json
++spec/parsing/fixtures/pass.deep_arrays.json
++spec/parsing/fixtures/pass.difficult_json_c_test_case.json
++spec/parsing/fixtures/pass.difficult_json_c_test_case_with_comments.json
++spec/parsing/fixtures/pass.doubles.json
++spec/parsing/fixtures/pass.empty_array.json
++spec/parsing/fixtures/pass.empty_string.json
++spec/parsing/fixtures/pass.escaped_bulgarian.json
++spec/parsing/fixtures/pass.escaped_foobar.json
++spec/parsing/fixtures/pass.item.json
++spec/parsing/fixtures/pass.json-org-sample1.json
++spec/parsing/fixtures/pass.json-org-sample2.json
++spec/parsing/fixtures/pass.json-org-sample3.json
++spec/parsing/fixtures/pass.json-org-sample4-nows.json
++spec/parsing/fixtures/pass.json-org-sample4.json
++spec/parsing/fixtures/pass.json-org-sample5.json
++spec/parsing/fixtures/pass.map-spain.xml.json
++spec/parsing/fixtures/pass.ns-invoice100.xml.json
++spec/parsing/fixtures/pass.ns-soap.xml.json
++spec/parsing/fixtures/pass.numbers-fp-4k.json
++spec/parsing/fixtures/pass.numbers-fp-64k.json
++spec/parsing/fixtures/pass.numbers-int-4k.json
++spec/parsing/fixtures/pass.numbers-int-64k.json
++spec/parsing/fixtures/pass.twitter-search.json
++spec/parsing/fixtures/pass.twitter-search2.json
++spec/parsing/fixtures/pass.unicode.json
++spec/parsing/fixtures/pass.yelp.json
++spec/parsing/fixtures/pass1.json
++spec/parsing/fixtures/pass2.json
++spec/parsing/fixtures/pass3.json
++spec/parsing/fixtures_spec.rb
++spec/parsing/one_off_spec.rb
++spec/rcov.opts
++spec/spec_helper.rb
+diff --git a/yajl-ruby.gemspec b/yajl-ruby.gemspec
+index ec7798a..29583e7 100644
+--- a/yajl-ruby.gemspec
++++ b/yajl-ruby.gemspec
+@@ -10,12 +10,12 @@ Gem::Specification.new do |s|
+   s.extra_rdoc_files = [
+     "README.rdoc"
+   ]
+-  s.files = `git ls-files`.split("\n")
++  s.files = `cat git.ls-files`.split("\n")
+   s.homepage = %q{http://github.com/brianmario/yajl-ruby}
+   s.require_paths = ["lib", "ext"]
+   s.rubygems_version = %q{1.4.2}
+   s.summary = %q{Ruby C bindings to the excellent Yajl JSON stream-based parser library.}
+-  s.test_files = `git ls-files spec examples`.split("\n")
++  s.test_files = `cat git.ls-files.spec.examples`.split("\n")
+ 
+   # tests
+   s.add_development_dependency 'rake-compiler', ">= 0.7.5"
+-- 

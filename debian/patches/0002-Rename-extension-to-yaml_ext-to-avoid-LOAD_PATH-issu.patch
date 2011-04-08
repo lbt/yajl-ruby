@@ -1,0 +1,52 @@
+From: David Greaves <david@dgreaves.com>
+Date: Thu, 7 Apr 2011 14:43:21 +0100
+Subject: [PATCH] Rename extension to yaml_ext to avoid LOAD_PATH issues
+
+---
+ ext/yajl/extconf.rb |    2 +-
+ ext/yajl/yajl_ext.c |    2 +-
+ lib/yajl.rb         |    4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/ext/yajl/extconf.rb b/ext/yajl/extconf.rb
+index 9db2689..82044a2 100644
+--- a/ext/yajl/extconf.rb
++++ b/ext/yajl/extconf.rb
+@@ -5,4 +5,4 @@ require 'rbconfig'
+ $CFLAGS << ' -Wall -funroll-loops'
+ $CFLAGS << ' -Wextra -O0 -ggdb3' if ENV['DEBUG']
+ 
+-create_makefile("yajl")
++create_makefile("yajl_ext")
+diff --git a/ext/yajl/yajl_ext.c b/ext/yajl/yajl_ext.c
+index 44c0f7e..5629fe0 100644
+--- a/ext/yajl/yajl_ext.c
++++ b/ext/yajl/yajl_ext.c
+@@ -853,7 +853,7 @@ static VALUE rb_yajl_encoder_enable_json_gem_ext(VALUE klass) {
+ 
+ 
+ /* Ruby Extension initializer */
+-void Init_yajl() {
++void Init_yajl_ext() {
+     mYajl = rb_define_module("Yajl");
+ 
+     cParseError = rb_define_class_under(mYajl, "ParseError", rb_eStandardError);
+diff --git a/lib/yajl.rb b/lib/yajl.rb
+index 9b8fe5a..a314086 100644
+--- a/lib/yajl.rb
++++ b/lib/yajl.rb
+@@ -1,5 +1,5 @@
+ # encoding: UTF-8
+-require 'yajl/yajl'
++require 'yajl_ext'
+ 
+ # = Extras
+ # We're not going to load these auotmatically, because you might not need them ;)
+@@ -73,4 +73,4 @@ module Yajl
+       new(options).encode(obj, io, &block)
+     end
+   end
+-end
+\ No newline at end of file
++end
+-- 
