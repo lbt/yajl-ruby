@@ -5,7 +5,12 @@
 #export DH_RUBY_IGNORE_TESTS=all
 #
 # Uncomment to ignore some test failures. Valid values:
-#export DH_RUBY_IGNORE_TESTS=ruby1.8 ruby1.9.1 require-rubygems
+export DH_RUBY_IGNORE_TESTS=require-rubygems
 
 %:
 	dh $@ --buildsystem=ruby
+
+override_dh_clean:
+	# make clean doesn't remove these. It should be make distclean
+	rm -f ext/Makefile ext/yajl/Makefile
+	dh_clean $@

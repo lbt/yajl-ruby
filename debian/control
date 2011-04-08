@@ -12,22 +12,25 @@ Homepage: http://github.com/brianmario/yajl-ruby
 
 Package: ruby-yajl
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby-rake-compiler (>= 0.7.5), ruby-librspec (>= 2.0.0), activesupport, ruby-json
 # rake-compiler (>= 0.7.5), rspec (>= 2.0.0), activesupport (>= 0), json (>= 0)
 Description: Ruby C bindings to the excellent Yajl JSON stream-based parser library.
- <insert long description, indented with spaces>
+ Ruby C bindings to the excellent Yajl JSON stream-based parser
+ library.
 
 Package: ruby1.8-yajl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 # rake-compiler (>= 0.7.5), rspec (>= 2.0.0), activesupport (>= 0), json (>= 0)
 Description: Ruby C bindings to the excellent Yajl JSON stream-based parser library.
- <insert long description, indented with spaces>
+ Ruby C bindings to the excellent Yajl JSON stream-based parser
+ library.
 
 Package: ruby1.9.1-yajl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 # rake-compiler (>= 0.7.5), rspec (>= 2.0.0), activesupport (>= 0), json (>= 0)
 Description: Ruby C bindings to the excellent Yajl JSON stream-based parser library.
- <insert long description, indented with spaces>
+ Ruby C bindings to the excellent Yajl JSON stream-based parser
+ library.
 
